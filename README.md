@@ -52,7 +52,7 @@ Python 3.8 ou supérieur
 
 Un serveur de base de données PostgreSQL
 
-Étapes d'installation
+**Étapes d'installation**
 Installe les dépendances Python :
 
 pip install fastapi uvicorn Jinja2 sqlalchemy psycopg2-binary passlib joblib scikit-learn
