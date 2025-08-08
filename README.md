@@ -71,6 +71,7 @@ uvicorn app:app --reload
 L'application sera accessible après via un lien sur le terminal.
 
 **Structure du Projet**
+
 .
 ├── app.py                  # Fichier principal de l'application FastAPI
 
@@ -78,13 +79,20 @@ L'application sera accessible après via un lien sur le terminal.
 
 ├── modele_diabetes.pkl           # Fichier du modèle de prédiction sauvegardé
  
-├── templates/              # Dossier des fichiers HTML (Jinja2)
+├── templates/    # Dossier des fichiers HTML (Jinja2)
+
 │   ├── login.html
+
 │   ├── register.html
+
 │   ├── dashboard.html
+
 │   ├── add_patient.html
+
 │   └── list_patients.html
+
 └── static/                 # Dossier des fichiers statiques (CSS, JS)
+
     └── styles.css
 
 Auteur
