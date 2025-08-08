@@ -1,0 +1,13 @@
+app.py : Point d'entrée principal avec toutes les routes FastAPI
+
+database.py : Configuration de la connexion à PostgreSQL
+
+models.py : Définition des tables (doctors, patients)
+
+auth.py : Fonctions pour le hachage des mots de passe et vérification
+
+ml_model.py : Chargement du modèle ML et fonction de prédiction
+
+templates/ : Templates HTML avec Jinja2
+
+static/style.css : Style CSS minimal

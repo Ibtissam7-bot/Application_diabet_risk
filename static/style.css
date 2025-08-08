@@ -1,0 +1,5 @@
+/* static/css/style.css */
+/* Tu peux ajouter tes styles personnalisés ici, Tailwind CSS est déjà inclus */
+body {
+    background-color: #f3f4f6; /* Tailwind gray-100 */
+}
