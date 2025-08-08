@@ -91,6 +91,7 @@ L'application sera accessible après via un lien sur le terminal.
 
 │   └── list_patients.html
 
-└── static/                 # Dossier des fichiers statiques (CSS, JS)
-    └── styles.css
+└── static/   # Dossier des fichiers statiques (CSS, JS)
+
+│   └── styles.css
 
