@@ -8,17 +8,16 @@ from sqlalchemy import MetaData # Nous aurons besoin de MetaData ici ou dans mod
 db_host = "localhost"
 db_port = 5432
 db_user = "postgres"
-db_password = "azerty" # Assure-toi que c'est ton vrai mot de passe PostgreSQL
-db_name = "diabetoweb" # Utilisons le nom de la base de données que nous avons créé
+db_password = "azerty" 
+db_name = "diabetoweb" 
 
 # Construction de l'URL de connexion
-# 'postgresql+psycopg2' indique le dialecte et le driver
+
 db_URL= f"postgresql+psycopg2://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
 # Créer le moteur de la base de données
 engine = create_engine(db_URL)
 
 # Créer une session locale pour interagir avec la base de données
-# Bien que nous utilisions SQLAlchemy Core, SessionLocal reste utile pour gérer les transactions
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # MetaData est nécessaire pour définir les tables avec SQLAlchemy Core

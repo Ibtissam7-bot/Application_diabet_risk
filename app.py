@@ -9,13 +9,13 @@ from sqlalchemy import select, insert, delete # Importe delete pour la suppressi
 from sqlalchemy.exc import IntegrityError
 import secrets
 from joblib import load # Utilise joblib.load au lieu de pickle.load
-import numpy as np # Pour pr\u00E9parer les donn\u00E9es pour le mod\u00E8le ML
+import numpy as np # Pour preparer les donnees pour le modele ML
 
 from database import engine, SessionLocal, get_db, metadata # Importe metadata et engine
 from models import doctors, patients, predictions # Importe les objets Table d\u00E9finis
 from auth import hash_password, verify_password
 
-# Cr\u00E9e toutes les tables d\u00E9finies dans metadata
+# Cree toutes les tables d\u00E9finies dans metadata
 metadata.create_all(engine)
 
 app = FastAPI()
@@ -26,33 +26,32 @@ templates = Jinja2Templates(directory="templates")
 # Configuration des fichiers statiques (CSS, JS, images)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# Cl\u00E9 secr\u00E8te pour les sessions (\u00E0 g\u00E9n\u00E9rer de mani\u00E8re s\u00E9curis\u00E9e en production)
+# Cle secrete pour les sessions 
 SECRET_KEY = secrets.token_hex(32)
 
-# Charger le mod\u00E8le de Machine Learning au d\u00E9marrage de l'application
-# Assurez-vous que 'diabetes_model.pkl' est \u00E0 la racine de votre projet DiabetoWeb
+# Charger le modele de Machine Learning au demarrage de l'application
 try:
     with open('diabetes_model.pkl', 'rb') as f:
         ml_model = load(f) # Utilise joblib.load
     print("Mod\u00E8le de Machine Learning charg\u00E9 avec succ\u00E8s.")
 except FileNotFoundError:
     print("Erreur: Le fichier 'diabetes_model.pkl' n'a pas \u00E9t\u00E9 trouv\u00E9.")
-    ml_model = None # Le mod\u00E8le sera None si le fichier n'est pas trouv\u00E9
+    ml_model = None # Le modele sera None si le fichier n'est pas trouve
 except Exception as e:
     print(f"Erreur lors du chargement du mod\u00E8le ML: {e}")
     ml_model = None
 
 
-# D\u00E9pendance pour obtenir l'utilisateur (m\u00E9decin) actuellement connect\u00E9
+# Dependance pour obtenir l'utilisateur (medecin) actuellement connecte
 async def get_current_doctor_core(request: Request, db: Session = Depends(get_db)):
     doctor_id = request.cookies.get("doctor_id")
     if doctor_id:
-        # Utilisation de SQLAlchemy Core pour s\u00E9lectionner le m\u00E9decin
+        # Utilisation de SQLAlchemy Core pour selectionner le medecin
         stmt = select(doctors).where(doctors.c.id == int(doctor_id))
-        result = db.execute(stmt).first() # 'db' est utilis\u00E9 ici
+        result = db.execute(stmt).first() # 'db' est utilise ici
         if result:
-            # Retourne le Row object, tu peux acc\u00E9der aux colonnes via ._asdict() ou par attribut
-            return result._asdict() # Convertit le Row en dictionnaire pour un acc\u00E8s facile
+            # Retourne le Row object, tu peux acceder aux colonnes via ._asdict() ou par attribut
+            return result._asdict() # Convertit le Row en dictionnaire pour un acces facile
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Non authentifie",
@@ -62,7 +61,7 @@ async def get_current_doctor_core(request: Request, db: Session = Depends(get_db
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
     """
-    Redirige l'utilisateur vers la page de connexion par d\u00E9faut.
+    Redirige l'utilisateur vers la page de connexion par défaut.
     """
     return RedirectResponse(url="/login")
 
@@ -200,26 +199,26 @@ async def add_patient_submit(request: Request,
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
 
-    # Pr\u00E9parer les donn\u00E9es pour le mod\u00E8le de ML avec les caract\u00E9ristiques sp\u00E9cifi\u00E9es:
+    # Preparer les donnees pour le modele de ML avec les caracteristiques specifie9es:
     # ["Glucose", "BMI", "Age", "DiabetesPedigreeFunction"]
     features = np.array([[glucose, bmi, age, pedigree]])
 
-    # Effectuer la pr\u00E9diction
+    # Effectuer la prediction
     prediction_result = ml_model.predict(features)[0] # [0] pour obtenir la valeur unique
 
-    # Interpr\u00E9ter le r\u00E9sultat
-    diabetes_status = 1 if prediction_result == 1 else 0 # 1 = diab\u00E9tique, 0 = non diab\u00E9tique
+    # Interpreter le resultat
+    diabetes_status = 1 if prediction_result == 1 else 0 # 1 = diabetique, 0 = non diabetique
 
-    # Ins\u00E9rer le patient dans la base de donn\u00E9es
+    # Inserer le patient dans la base de donnees
     insert_patient_stmt = insert(patients).values(
-        doctor_id=current_doctor["id"], # Utilise l'ID du m\u00E9decin connect\u00E9
+        doctor_id=current_doctor["id"], # Utilise l'ID du medecin connecte
         name=name,
         age=age,
         sex=sex,
         glucose=glucose,
         bmi=bmi,
         pedigree=pedigree,
-        result=diabetes_status # Stocke le r\u00E9sultat de la pr\u00E9diction
+        result=diabetes_status # Stocke le resultat de la prediction
     )
 
     try:
@@ -246,30 +245,31 @@ async def patients_list(request: Request,
                         current_doctor: dict = Depends(get_current_doctor_core),
                         success_message: str = None,
                         error_message: str = None,
-                        sort_by: str = "created_at", # Param\u00E8tre pour le tri
+                        sort_by: str = "created_at", # Parametre pour le tri
                         order: str = "desc", # Ordre de tri (asc/desc)
-                        db: Session = Depends(get_db)): # 'db' est d\u00E9fini ici
+                        db: Session = Depends(get_db)): # 'db' est defini ici
     """
-    Affiche la liste des patients du m\u00E9decin connect\u00E9.
+    Affiche la liste des patients du medeci connecte.
     """
     doctor_id = current_doctor["id"]
 
-    # S\u00E9lectionne tous les patients du m\u00E9decin connect\u00E9
+    # Selectionne tous les patients du medecin connecte
     stmt = select(patients).where(patients.c.doctor_id == doctor_id)
     
-    # Ex\u00E9cute la requ\u00EAte
+    # Execute la requette
     result = db.execute(stmt).fetchall()
     
     # Convertit les Row objects en listes de dictionnaires pour Jinja2
-    # et pour faciliter le tri en Python (si n\u00E9cessaire)
+   
     all_patients = [patient._asdict() for patient in result]
 
-    # Tri des patients en Python (car orderBy() est \u00E0 \u00E9viter pour les index manquants)
     if sort_by in ["name", "age", "glucose", "bmi", "pedigree", "result", "created_at"]:
         reverse_sort = (order == "desc")
         all_patients.sort(key=lambda p: p[sort_by] if p[sort_by] is not None else (float('-inf') if reverse_sort else float('inf')), reverse=reverse_sort)
         
-    # Calcul de la statistique : % de patients diab\u00E9tiques
+    # Calcul de la statistique : % de patients diabetiques
+    # Note: 1 = diabetique, 0 = non diabetique
+
     total_patients = len(all_patients)
     diabetic_patients = sum(1 for p in all_patients if p['result'] == 0)
     diabetic_percentage = (diabetic_patients / total_patients * 100) if total_patients > 0 else 0

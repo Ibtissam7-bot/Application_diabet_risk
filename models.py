@@ -2,7 +2,7 @@ from sqlalchemy import Table, Column, Integer, String, DateTime, ForeignKey, Flo
 from sqlalchemy.sql import func
 from database import metadata # Importe l'objet metadata que nous avons défini dans database.py
 
-# Définition de la table 'doctors' (inchangée)
+# Définition de la table 'doctors'
 doctors = Table(
     "doctors",
     metadata,
@@ -13,7 +13,7 @@ doctors = Table(
     Column("created_at", DateTime(timezone=True), server_default=func.now())
 )
 
-# Définition de la table 'patients' (bloodpressure retiré)
+# Définition de la table 'patients' 
 patients = Table(
     "patients",
     metadata,
@@ -21,7 +21,7 @@ patients = Table(
     Column("doctor_id", Integer, ForeignKey("doctors.id"), nullable=False), # Clé étrangère vers doctors
     Column("name", String(255), nullable=False),
     Column("age", Integer),
-    Column("sex", String(10)), # 'M', 'F', 'Autre'
+    Column("sex", String(10)), # 'M', 'F'
     Column("glucose", Integer),
     Column("bmi", Float), # IMC peut être un nombre décimal
     Column("pedigree", Float), # Fonction pedigree peut être un nombre décimal
@@ -29,7 +29,7 @@ patients = Table(
     Column("result", Integer, nullable=True) # 0 = non diabétique, 1 = diabétique
 )
 
-# Définition de la table 'predictions' (inchangée)
+# Définition de la table 'predictions' 
 predictions = Table(
     "predictions",
     metadata,
